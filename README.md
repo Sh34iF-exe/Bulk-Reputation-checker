@@ -24,9 +24,8 @@ The application is designed to run locally by default. Provider credentials are 
 
 - TypeScript
 - React 19
-- Next.js application structure
-- Vinext and Vite
-- Cloudflare Worker-compatible server runtime
+- Next.js 16
+- Netlify Next.js runtime
 - CSS with responsive breakpoints and theme variables
 - Browser `localStorage` for Local Database records and theme preference
 
@@ -54,7 +53,7 @@ Open the local address printed by the terminal. It is normally:
 http://localhost:3000
 ```
 
-If port 3000 is occupied, Vite may select another port. Use the exact URL shown in the terminal.
+If port 3000 is occupied, Next.js may select another port. Use the exact URL shown in the terminal.
 
 Press `Ctrl+C` in the terminal to stop the development server.
 
@@ -125,26 +124,21 @@ The cache is process-local. It is cleared whenever the development server restar
 
 ```text
 .
-├── .openai/
-│   └── hosting.json          # Required local Sites/Vinext configuration
 ├── app/
 │   ├── api/analyze/route.ts  # Validation, provider calls, and response cache
 │   ├── globals.css           # Themes, layout, and responsive styling
 │   ├── layout.tsx            # Fonts and document metadata
 │   └── page.tsx              # Interface, navigation, state, DB, and converter
-├── build/
-│   └── sites-vite-plugin.ts  # Required build integration
 ├── public/                   # Static assets
 ├── tests/                    # Automated source/build checks
-├── worker/
-│   └── index.ts              # Worker entry point
 ├── .env.example              # Safe provider-variable template
+├── netlify.toml              # Netlify build and publish settings
 ├── package.json              # Scripts and pinned dependency versions
 ├── package-lock.json         # Reproducible npm dependency tree
-└── vite.config.ts            # Vinext/Vite/Worker configuration
+└── next.config.ts            # Next.js configuration
 ```
 
-Do not edit generated files inside `node_modules/`, `.vinext/`, `.wrangler/`, or `dist/`.
+Do not edit generated files inside `node_modules/` or `.next/`.
 
 ## Dependency and audit warnings
 
@@ -154,7 +148,7 @@ Do not edit generated files inside `node_modules/`, `.vinext/`, `.wrangler/`, or
 npm audit fix --force
 ```
 
-The forced command may replace the pinned React, Vinext, Vite, or Cloudflare packages with incompatible versions and cause import failures.
+The forced command may replace the pinned React or Next.js packages with incompatible versions and cause import failures.
 
 To inspect production-relevant findings:
 
@@ -172,7 +166,7 @@ Restore the repository versions of `package.json` and `package-lock.json`, then 
 
 ```powershell
 Remove-Item -Recurse -Force node_modules
-Remove-Item -Recurse -Force .vinext, dist, .wrangler -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue
 npm cache verify
 npm ci
 npm run dev

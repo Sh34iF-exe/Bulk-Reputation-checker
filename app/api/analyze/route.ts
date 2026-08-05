@@ -1,5 +1,3 @@
-import { env } from "cloudflare:workers";
-
 type AnalysisType = "ip" | "hash" | "url";
 type Verdict = "malicious" | "suspicious" | "clean" | "unknown";
 
@@ -307,7 +305,10 @@ export async function POST(request: Request) {
       .slice(0, 50);
     if (!indicators.length) return Response.json({ error: "At least one indicator is required" }, { status: 400 });
 
-    const runtime = env as RuntimeEnv;
+    const runtime: RuntimeEnv = {
+      VIRUSTOTAL_API_KEY: process.env.VIRUSTOTAL_API_KEY,
+      ABUSEIPDB_API_KEY: process.env.ABUSEIPDB_API_KEY,
+    };
     const results: Result[] = [];
     for (let index = 0; index < indicators.length; index += 5) {
       const batch = indicators.slice(index, index + 5);
